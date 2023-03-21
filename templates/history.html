@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>交易紀錄</title>
+</head>
+<body>
+    <h1>交易紀錄</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>日期時間</th>
+                <th>交易資訊</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction_info in transaction_history %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ transaction_info }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

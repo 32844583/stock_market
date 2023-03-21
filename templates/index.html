@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>股票即時價格查詢</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+<body>
+    <h1>近三十天資料 k plot</h1>
+    {{ plot_html|safe }}
+    <form method="POST" action="{{ url_for('index') }}">
+        <label for="timeframe">选择时间段：</label>
+        <select id="timeframe" name="timeframe">
+            <option value="3mo">3个月</option>
+            <option value="1mo">1个月</option>
+            <option value="6mo">6个月</option>
+            <option value="1y">1年</option>
+        </select>
+        <input type="submit" value="提交">
+    </form>
+
+    <h1>股票即時價格查詢</h1>
+
+    <form id="search-form">
+        <label for="stock-id">股票代號：</label>
+        <input type="text" id="stock-id" name="stock_id">
+        <button type="submit">查詢</button>
+    </form>
+    <div id='result'></div>
+
+    <form id="order-form" style="display: none;">
+    <label for="order-quantity">下單數量：</label>
+    <input type="number" id="order-quantity" name="order_quantity" min="1" max="100">
+    <button id='place-order-btn' type="submit">下單</button>
+    </form>
+
+    <div id='balance'>{{balance}}</div>
+    <button id="history-btn">歷史交易紀錄查詢</button>
+    <h1>交易明細</h1>
+    <ul>
+        {% for transaction in transaction_history %}
+            <li>{{ transaction }}</li>
+        {% endfor %}
+    </ul>
+    <script>
+
+        $(function() {
+            $('#search-form').on('submit', function(event) {
+                event.preventDefault();
+                var stock_id = $('#stock-id').val();
+                $.ajax({
+                    url: '/search_stock',
+                    type: 'POST',
+                    data: {stock_id: stock_id},
+                    success: function(data) {
+                        if (data.error) {
+                            $('#result').text(data.error);
+                            $('#order-form').hide();
+                        } else {
+                            $('#result').text('即時價格： <br>' + data.price + '股票名稱： <br>' + data.name);
+                            if (data.can_order) {
+                                $('#order-form').show();
+                                $('#place-order-btn').show(); //新增下單按鈕顯示
+
+                            } else {
+                                $('#order-form').hide();
+                                $('#place-order-btn').hide(); //隱藏下單按鈕
+                            }
+                        }
+                    },
+                    error: function() {
+                        $('#result').text('查詢失敗');
+                        $('#order-form').hide();
+                    }
+                });
+            });
+
+            $('#order-form').on('submit', function(event) {
+                event.preventDefault();
+                var order_quantity = $('#order-quantity').val();
+                $.ajax({
+                    url: '/place_order',
+                    type: 'POST',
+                    data: {order_quantity: order_quantity},
+                    success: function(data) {
+                        if (data.error) {
+                            alert(data.error);
+                        } else {
+                            alert(data.transaction_info);
+                        }
+                    },
+                    error: function() {
+                        alert('下單失敗');
+                    }
+                });
+            });
+
+            $('#history-btn').on('click', function(event) {
+                event.preventDefault();
+                window.location.href = '/history';
+            });
+        });
+    </script>
+</body>
+</html>

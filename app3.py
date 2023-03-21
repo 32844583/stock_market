@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 import pandas as pd
 import yfinance as yf
 from plotly.subplots import make_subplots
-import talib   
+import numpy as np
 
 stock = yf.Ticker("2330.TW")
 data = stock.history(period='6mo')
@@ -86,8 +86,25 @@ fig.add_trace(go.Bar(x=data['Date'], y=data['Volume'], marker_color=colors, name
                secondary_y=False, row=2, col=1)
 
 # revise: RSI
-close = data['Close']
-data['RSI'] = talib.RSI(close, timeperiod=14)
+data['change'] = data['Close'].diff()
+data['gain'] = data.change.mask(data.change < 0, 0.0)
+data['loss'] = -data.change.mask(data.change > 0, -0.0)
+
+#@numba.jit
+def rma(x, n):
+    """Running moving average"""
+    a = np.full_like(x, np.nan)
+    a[n] = x[1:n+1].mean()
+    for i in range(n+1, len(x)):
+        a[i] = (a[i-1] * (n - 1) + x[i]) / n
+    return a
+
+data['avg_gain'] = rma(data.gain.to_numpy(), 14)
+data['avg_loss'] = rma(data.loss.to_numpy(), 14)
+
+data['rs'] = data.avg_gain / data.avg_loss
+data['RSI'] = 100 - (100 / (1 + data.rs))
+
 fig.add_trace(px.line(data, x="Date", y="RSI",
                  hover_name="Date", hover_data=["Date", "RSI"]).data[0],
               row=3, col=1)
@@ -110,11 +127,11 @@ fig.update_layout(xaxis_rangeslider_visible=False,
 print(data['buy_sell'].value_counts())
 
 fig.show()
-# tab1, tab2 = st.tabs(["Streamlit theme (default)", "Plotly native theme"])
-# with tab1:
-#     # Use the Streamlit theme.
-#     # This is the default. So you can also omit the theme argument.
-#     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
+tab1, tab2 = st.tabs(["Streamlit theme (default)", "Plotly native theme"])
+with tab1:
+    # Use the Streamlit theme.
+    # This is the default. So you can also omit the theme argument.
+    st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
 # with tab2:
 #     # Use the native Plotly theme.

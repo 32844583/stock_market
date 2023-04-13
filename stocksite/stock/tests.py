@@ -5,40 +5,29 @@ from json import loads, dumps
 from datetime import datetime
 
 
-
+# python plotly update particular trace's data by go
 
 # import plotly.graph_objects as go
 # import numpy as np
 
 # x = np.random.randn(500)
-# y = np.random.randn(500)
+# y1 = np.random.randn(500)
+# y2 = np.random.randn(500)
 
-# fig = go.Figure(data=go.Scatter(
-#     x=x,
-#     y=y,
-#     mode='markers',
-#     marker=dict(
-#         size=16,
-#         color=np.random.randn(500),
-#         colorscale='Viridis',
-#         showscale=True
-#     )
-# ))
+# fig = go.Figure()
+# fig.add_trace(go.Scatter(x=x, y=y1, mode='markers', name='Trace 1'))
+# fig.add_trace(go.Scatter(x=x, y=y2, mode='markers', name='Trace 2'))
 
 # fig.show()
 
-# # Update trace data
-# new_x = np.random.randn(500)
-# new_y = np.random.randn(500)
+# # Update trace data for Trace 1
+# new_y1 = np.random.randn(500)
 
-# fig.update_traces(x=new_x, y=new_y)
+# fig.update_traces(selector=dict(name='Trace 1'), y=new_y1)
 
 # fig.show()
 
-
-
-
-
+fig.data.pop(1)
 
 
 
@@ -86,15 +75,7 @@ from datetime import datetime
 # # 下載歷史股價資料
 # df = yf.download('AAPL', start='2021-01-01', end='2022-04-10')
 
-# # 計算 KD 值
-# high = df['High'].values
-# low = df['Low'].values
-# close = df['Close'].values
-# k, d = talib.STOCH(high, low, close, fastk_period=9, slowk_period=3, slowk_matype=0, slowd_period=3, slowd_matype=0)
 
-# # 將 KD 值新增為新欄位
-# df['K'] = k
-# df['D'] = d
 
 # # 計算 KD 黃金交叉、死亡交叉欄位
 # df['KD_Golden_Cross'] = ((df['K'].shift(1) < df['D'].shift(1)) & (df['K'] > df['D'])).astype(int)

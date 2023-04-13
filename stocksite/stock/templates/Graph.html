@@ -7,74 +7,48 @@
     <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>  
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/table.css'%}">
   </head>
   <body>
 
-    <button class='volume'>volume</button>
-    <button class='RSI'>RSI</button>
-    <button class='3mo'>3mo</button>
+    <button id='K' name="ajax-k-event">K</button>
+    <button id='RSI' name="ajax-rsi-event">RSI</button>
+    <button id='3mo' name="ajax-period-event">3mo</button>
+    <button id='7d' name="ajax-interval-event">7d</button>
+    <div id='plotly'>
       {% if graph %}
       <div style="width:600;height:500">
       {{ graph|safe }}
       </div>
       {% endif %}
-    
-
-
+    </div>
+    {{table}}
     <ul id='list'></ul>
-    <script>
-$('#datatable-buttons').on('mouseover', 'tbody tr',
+    <table id="customers">
 
-
-      $(document).ready(function(){
-
-        $(".3mo").click(function(){
-          $.ajax({
-            url:'',
-            type:'post',
-            data:{
-              // button_text 是傳回 Django 的變數名稱
-              button_text: $(this).text()
-            },
-            success: function(response){
-                $('#list').append('<li>' + response.djangotoajax + '</li>')
-                $('#gra').html(response.newgraph);
-            }
-          });
-        });
-        $(".volume").click(function(){
-          $.ajax({
-            url:'',
-            type:'post',
-            data:{
-              // button_text 是傳回 Django 的變數名稱
-              button_text: $(this).text()
-            },
-            success: function(response){
-                $('#list').append('<li>' + response.djangotoajax + '</li>')
-                $('#gra').html(response.newgraph);
-            }
-          });
-        });
-        $(".RSI").click(function(){
-          $.ajax({
-            url:'',
-            type:'post',
-            data:{
-              // button_text 是傳回 Django 的變數名稱
-              button_text: $(this).text()
-            },
-            success: function(response){
-                $('#list').append('<li>' + response.djangotoajax + '</li>')
-                $('#gra').html(response.newgraph);
-            }
-          });
-        });
-      });
-
-
-    </script>
+    <tr>
+      <th>Index</th>
+      <th>Code</th>
+      <th>Quantity</th>
+      <th>PNL</th>
+      <th>Date</th>
+      <th>Price</th>
+      <th>Reason</th>
+    </tr>
+    {% for item in trades %}
+    <tr id={{item.index}} name="ajax-hover-event">
+    <td>{{item.index}}</td>
+    <td>{{item.code}}</td>
+    <td>{{item.quantity}}</td>
+    <td>{{item.pnl}}</td>
+    <td>{{item.date}}</td>
+    <td>{{item.price}}</td>
+    <td>{{item.reason}}</td>
+    </tr>
+    {% endfor %}
+    <script src="{% static 'js/interaction.js'%}"></script>
   </body>
 
 </html>

@@ -1,0 +1,22 @@
+[E 2023-04-11 22:12:17,153 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\utils.py:48:raise_resp_error] {'status': {'status_code': 406}, 'response': {'detail': 'Account Not Acceptable.'}}
+[E 2023-04-11 22:12:42,213 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\utils.py:48:raise_resp_error] {'status': {'status_code': 406}, 'response': {'detail': 'Account Not Acceptable.'}}
+[E 2023-04-11 22:13:21,733 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\utils.py:48:raise_resp_error] {'status': {'status_code': 406}, 'response': {'detail': 'Account Not Acceptable.'}}
+[E 2023-04-11 22:13:53,585 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\utils.py:48:raise_resp_error] {'status': {'status_code': 406}, 'response': {'detail': 'Account Not Acceptable.'}}
+[E 2023-04-11 22:23:49,932 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\utils.py:48:raise_resp_error] {'status': {'status_code': 406}, 'response': {'detail': 'Account Not Acceptable.'}}
+[E 2023-04-11 22:24:16,593 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\utils.py:48:raise_resp_error] {'status': {'status_code': 406}, 'response': {'detail': 'Account Not Acceptable.'}}
+[E 2023-04-11 22:25:36,603 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\utils.py:48:raise_resp_error] {'status': {'status_code': 406}, 'response': {'detail': 'Account Not Acceptable.'}}
+[E 2023-04-11 22:25:51,563 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\utils.py:48:raise_resp_error] {'status': {'status_code': 406}, 'response': {'detail': 'Account Not Acceptable.'}}
+[E 2023-04-11 22:26:18,713 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\utils.py:48:raise_resp_error] {'status': {'status_code': 406}, 'response': {'detail': 'Account Not Acceptable.'}}
+[E 2023-04-11 22:27:23,003 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\utils.py:48:raise_resp_error] {'status': {'status_code': 406}, 'response': {'detail': 'Account Not Acceptable.'}}
+[E 2023-04-11 22:51:12,768 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\utils.py:48:raise_resp_error] {'status': {'status_code': 406}, 'response': {'detail': 'Account Not Acceptable.'}}
+[E 2023-04-12 11:00:23,692 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\shioaji.py:222:_setup_solace] RequestException URLError(gaierror(11001, 'getaddrinfo failed'))
+[E 2023-04-12 11:00:24,192 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\shioaji.py:222:_setup_solace] RequestException URLError(gaierror(11001, 'getaddrinfo failed'))
+[E 2023-04-12 11:00:24,708 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\shioaji.py:222:_setup_solace] RequestException URLError(gaierror(11001, 'getaddrinfo failed'))
+[E 2023-04-12 11:00:25,223 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\shioaji.py:222:_setup_solace] RequestException URLError(gaierror(11001, 'getaddrinfo failed'))
+[E 2023-04-12 11:00:25,723 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\shioaji.py:222:_setup_solace] RequestException URLError(gaierror(11001, 'getaddrinfo failed'))
+[E 2023-04-12 11:00:26,239 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\shioaji.py:222:_setup_solace] RequestException URLError(gaierror(11001, 'getaddrinfo failed'))
+[E 2023-04-12 11:08:11,422 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\utils.py:48:raise_resp_error] {'status': {'status_code': 406}, 'response': {'detail': 'Account Not Acceptable.'}}
+[E 2023-04-12 11:09:36,018 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\utils.py:48:raise_resp_error] {'status': {'status_code': 406}, 'response': {'detail': 'Account Not Acceptable.'}}
+[E 2023-04-12 11:10:16,803 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\utils.py:48:raise_resp_error] {'status': {'status_code': 406}, 'response': {'detail': 'Account Not Acceptable.'}}
+[E 2023-04-12 12:38:09,832 C:\Users\ZiWei\anaconda3\envs\opencv\lib\site-packages\shioaji\shioaji.py:402:place_order] {'status': {'status_code': 406}, 'response': {'detail': 'Account Not Acceptable.'}}
+[E 2023-04-12 15:13:16,693 C:\Users\ZiWei\anaconda3\envs\opencv\lib\site-packages\shioaji\utils.py:48:raise_resp_error] {'status': {'status_code': 500}, 'response': {'detail': 'Internal Server Error'}}

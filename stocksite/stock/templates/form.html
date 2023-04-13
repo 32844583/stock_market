@@ -1,0 +1,54 @@
+  <link rel="stylesheet" href="{% static 'css/dropdownlist.css' %}">
+<link rel="stylesheet" href="{% static 'css/multipledropdown.css'%}">
+<link rel="stylesheet" href="{% static 'css/button.css'%}">
+<link rel="stylesheet" href="{% static 'css/checkbox.css'%}">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Raleway'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
+<script src="{% static 'js/multipledropdown.js'%}"></script>
+  <form method="post" action="{% url 'Graph' %}">
+    {% csrf_token %}
+    <label for="single-dropdown">Single Dropdown:</label>
+    <div class="search_categories">
+        <div class="select">
+           <select name="period" id="search_categories">
+              <option value="1" selected="selected">日線</option>
+              <option value="2">周線</option>
+              <option value="3">月線</option>
+            </select>
+         </div>
+     </div>
+    <p>
+    
+    <label for="multi-dropdown">Multi Dropdown:</label>
+      <select multiple="multiple" id="myMulti">
+          <option>Item 1</option>
+          <option>item 2</option>
+          <option>item 3</option>
+          <option>item 4</option>
+      </select>
+    <p>
+
+    <label for="multi-checkbox">Multi checkbox</label>
+    <label class="container">One
+      <input type="checkbox" checked="checked">
+      <span class="checkmark"></span>
+    </label>
+
+    <label class="container">Two
+      <input type="checkbox">
+      <span class="checkmark"></span>
+    </label>
+
+    <label class="container">Three
+      <input type="checkbox">
+      <span class="checkmark"></span>
+    </label>
+
+    <label class="container">Four
+      <input type="checkbox">
+      <span class="checkmark"></span>
+    </label>
+    <p>
+    <input type="button" class="button" value="Input Button">
+
+  </form>

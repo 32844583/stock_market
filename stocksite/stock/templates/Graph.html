@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" >
+  <head>
+    <meta charset="utf-8">
+    <title>My test page</title>
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+  </head>
+  <body>
+
+    <button class='volume'>volume</button>
+    <button class='RSI'>RSI</button>
+    <button class='3mo'>3mo</button>
+      {% if graph %}
+      <div style="width:600;height:500">
+      {{ graph|safe }}
+      </div>
+      {% endif %}
+    
+
+
+    <ul id='list'></ul>
+    <script>
+$('#datatable-buttons').on('mouseover', 'tbody tr',
+
+
+      $(document).ready(function(){
+
+        $(".3mo").click(function(){
+          $.ajax({
+            url:'',
+            type:'post',
+            data:{
+              // button_text 是傳回 Django 的變數名稱
+              button_text: $(this).text()
+            },
+            success: function(response){
+                $('#list').append('<li>' + response.djangotoajax + '</li>')
+                $('#gra').html(response.newgraph);
+            }
+          });
+        });
+        $(".volume").click(function(){
+          $.ajax({
+            url:'',
+            type:'post',
+            data:{
+              // button_text 是傳回 Django 的變數名稱
+              button_text: $(this).text()
+            },
+            success: function(response){
+                $('#list').append('<li>' + response.djangotoajax + '</li>')
+                $('#gra').html(response.newgraph);
+            }
+          });
+        });
+        $(".RSI").click(function(){
+          $.ajax({
+            url:'',
+            type:'post',
+            data:{
+              // button_text 是傳回 Django 的變數名稱
+              button_text: $(this).text()
+            },
+            success: function(response){
+                $('#list').append('<li>' + response.djangotoajax + '</li>')
+                $('#gra').html(response.newgraph);
+            }
+          });
+        });
+      });
+
+
+    </script>
+  </body>
+
+</html>
+

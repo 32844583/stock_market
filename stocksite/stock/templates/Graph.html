@@ -10,13 +10,53 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/table.css'%}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+<style>
+.hello-msg{
+  font-size: 18px;
+  color:#fff;
+  margin-right:50px;
+  text-decoration:None;
+  white-space: nowrap;
+}
+</style>
   </head>
   <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">股漲(一個酷酷的諧音梗)</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Analysis</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Summary</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link">Setting</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      {% if user.is_authenticated %}
+        <span class='hello-msg'>Hello {{request.user}}</span>
+        <span><a class='hello-msg' href="{% url 'logout'%}">Logout</a></span>
+      {% else %}
+        <span><a class='hello-msg' href="{% url 'login'%}">Login</a></span>
+      {% endif %}
 
+    </nav>
     <button id='K' name="ajax-k-event">K</button>
     <button id='RSI' name="ajax-rsi-event">RSI</button>
     <button id='3mo' name="ajax-period-event">3mo</button>
-    <button id='7d' name="ajax-interval-event">7d</button>
+    <button id='1wk' name="ajax-interval-event">1wk</button>
     <div id='plotly'>
       {% if graph %}
       <div style="width:600;height:500">
@@ -24,30 +64,33 @@
       </div>
       {% endif %}
     </div>
-    {{table}}
-    <ul id='list'></ul>
-    <table id="customers">
-
-    <tr>
-      <th>Index</th>
-      <th>Code</th>
-      <th>Quantity</th>
-      <th>PNL</th>
-      <th>Date</th>
-      <th>Price</th>
-      <th>Reason</th>
-    </tr>
-    {% for item in trades %}
-    <tr id={{item.index}} name="ajax-hover-event">
-    <td>{{item.index}}</td>
-    <td>{{item.code}}</td>
-    <td>{{item.quantity}}</td>
-    <td>{{item.pnl}}</td>
-    <td>{{item.date}}</td>
-    <td>{{item.price}}</td>
-    <td>{{item.reason}}</td>
-    </tr>
-    {% endfor %}
+    {% if user.is_authenticated %}
+        <table id="customers">
+        <tr>
+          <th>Index</th>
+          <th>Code</th>
+          <th>Quantity</th>
+          <th>PNL</th>
+          <th>Date</th>
+          <th>Price</th>
+          <th>Reason</th>
+        </tr>
+        {% for item in trades %}
+        <tr id={{item.index}} name="ajax-hover-event">
+        <td>{{item.index}}</td>
+        <td>{{item.code}}</td>
+        <td>{{item.quantity}}</td>
+        <td>{{item.pnl}}</td>
+        <td>{{item.date}}</td>
+        <td>{{item.price}}</td>
+        {% if item.reason %}
+        <td>{{item.reason}}</td>
+        {% else%}
+        <td><input type="text" size="10" name="input_name" id="input-box"></td>
+        {% endif %}
+        </tr>
+        {% endfor %}
+    {% endif %}
     <script src="{% static 'js/interaction.js'%}"></script>
   </body>
 

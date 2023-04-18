@@ -4,7 +4,8 @@ import numpy as np
 from json import loads, dumps
 from datetime import datetime
 
-
+# https://plainenglish.io/blog/user-registration-and-login-authentication-in-django-2f3450479409#viewspy
+# ---
 # python plotly update particular trace's data by go
 
 # import plotly.graph_objects as go
@@ -26,18 +27,6 @@ from datetime import datetime
 # fig.update_traces(selector=dict(name='Trace 1'), y=new_y1)
 
 # fig.show()
-
-fig.data.pop(1)
-
-
-
-
-
-
-
-
-
-
 
 
 

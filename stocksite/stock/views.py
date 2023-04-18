@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 import plotly.express as px
 import plotly.graph_objects as go
@@ -9,44 +9,16 @@ import numpy as np
 from json import loads, dumps
 from django.views.decorators.csrf import csrf_exempt
 import talib
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout as auth_logout
 
-def Canvas(request):
-    stock = yf.Ticker("2330.TW")
-    data = stock.history(period='6mo')
-    data = data[['Open','High','Low','Close','Volume']]
-    data.reset_index(level='Date', inplace=True)
-    result = []
-    for idx in range(data.shape[0]):
-        # print(type())
-        Date = data.iloc[idx, 0].date()
-        Date = Date.strftime('%Y-%m-%d')
-        Open = float(data.iloc[idx, 1])
-        High = float(data.iloc[idx, 2])
-        Low = float(data.iloc[idx, 3])
-        Close = float(data.iloc[idx, 4])
-        result.append({"date":Date, "open":Open, "high":High, "low":Low, "close":Close})
+from django.contrib import messages
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
 
-    result = dumps(result)
-    context = {'stock_data':result}
-    return render(request, "Canvas.html", context)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import time
+from .forms import CreateUserForm
 
 
 data=0
@@ -57,7 +29,59 @@ interval='1d'
 period='6mo'
 third='RSI'
 fig =''
-@csrf_exempt
+
+def timing(f):
+    def wrap(*args):
+        time1 = time.time()
+        ret = f(*args)
+        time2 = time.time()
+        print(f'{f.__name__} function took {time2 - time1:.5f} seconds')
+        return ret
+    return wrap
+
+def home(request):
+    return render(request, 'home.html')
+
+def register(request):
+    form = CreateUserForm()
+    if request.user.is_authenticated:
+        return redirect('Graph')
+    else:
+        if request.method == 'POST':
+            form = CreateUserForm(request.POST)
+            if form.is_valid():
+                form.save()
+                user = form.cleaned_data.get('username')
+                messages.success(request, 'Account was created for ' + user)
+
+                return redirect('login')
+        context = {'form': form}
+        return render(request, 'register.html', context)
+
+
+def login(request):
+    if request.user.is_authenticated:
+        return redirect('Graph')
+    else:
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                auth_login(request, user)
+                return redirect('Graph')
+            else:
+                messages.info(request, 'Username OR Password is incorrect')
+        context = {}
+        return render(request, 'login.html', context)
+
+def logout(request):
+    auth_logout(request)
+    return redirect('login')
+
+
+@timing
 def Graph(request):
     global fig, period, third, interval
     # https://stackoverflow.com/questions/61346100/plotly-how-to-style-a-plotly-figure-so-that-it-doesnt-display-gaps-for-missing
@@ -76,77 +100,33 @@ def Graph(request):
     if is_ajax(request=request):
         eventName = request.POST.get('eventName')
         button_text = request.POST.get('button_text')
+        if button_text and eventName:
+            if 'mo' in button_text:
+                period = button_text
+            elif 'wk' in button_text:
+                print(button_text)
+                interval = button_text
+            else:
+                third = button_text
 
-        if 'mo' in button_text:
-            period = button_text
-        elif 'd' in button_text:
-            interval = button_text
-        else:
-            third = button_text
-
-        # if eventName == 'ajax-hover-event':
-        #     fig.add_trace(
-        #         go.Scatter(
-        #             x=data.loc[2:4, 'Date'],
-        #             y=data.loc[2:4, 'Close'],
-        #             mode="markers",
-        #             marker=dict(
-        #                 symbol='triangle-up', 
-        #                 color='lightskyblue', 
-        #                 line=dict(color='black',width=2), 
-        #                 size = 10,
-        #                 opacity=0.5),
-        #             text =  + data['buy_sell'],
-        #             textposition = 'middle right',
-        #             name="sell",
-        #             hovertemplate='Price: %{y:$.2f} <extra></extra>'
-        #         ), row=1, col=1
-        #     )
-
-        if eventName == 'ajax-period-event' or eventName == 'ajax-interval-event':
-            data_reload_recalculate()
-            initialize()
-            first_graph_generate()
-            buy_sell_point_graph()
-            second_graph_generate()
-            third_graph_generate()
-            update_layout()
-        else:
-            third_graph_update()
-        # data.loc[0:100:10, 'buy_sell'] = 'buy'
-        # data.loc[0:100:27, 'buy_sell'] = 'sell'
-        # fig.add_trace(
-        #     go.Scatter(
-        #         x=data.loc[0:100:10, 'Date'],
-        #         y=data.loc[0:100:10, 'Close'],
-        #         mode="markers",
-        #         marker=dict(symbol='triangle-down', color='orange', line=dict(color='black',width=2), size = 10),
-        #         text = '\n' + data['buy_sell'],
-        #         textposition = 'middle right',
-        #         name="buy",
-        #         hovertemplate='Price: %{y:$.2f}<extra></extra>'
-        #     ), row=1, col=1
-        # )
-        # fig.add_trace(
-        #     go.Scatter(
-        #         x=data.loc[0:100:27, 'Date'],
-        #         y=data.loc[0:100:27, 'Close'],
-        #         mode="markers",
-        #         marker=dict(symbol='triangle-up', color='lightskyblue', line=dict(color='black',width=2), size = 10),
-        #         text =  + data['buy_sell'],
-        #         textposition = 'middle right',
-        #         name="sell",
-        #         hovertemplate='Price: %{y:$.2f}<extra></extra>'
-        #     ), row=1, col=1
-        # )
-        djangotoajax = '0'+button_text
-        newgraph = fig.to_html()
-        return JsonResponse({'djangotoajax':djangotoajax, 'newgraph':newgraph}, status =200)
+            if (eventName == 'ajax-period-event') or eventName == ('ajax-interval-event'):
+                data_reload_recalculate()
+                initialize()
+                first_graph_generate()
+                buy_sell_point_graph()
+                second_graph_generate()
+                third_graph_generate()
+                update_layout()
+            elif eventName == ('ajax-k-event') or eventName == ('ajax-rsi-event'):
+                third_graph_update()
+            djangotoajax = '0'+button_text
+            newgraph = fig.to_html()
+            return JsonResponse({'djangotoajax':djangotoajax, 'newgraph':newgraph}, status =200)
 
     
     trades = []
     for i in range(4):
-        trades.append({'index':i, 'code': '2888', 'quantity': 0, 'pnl': -2.0, 'date': '2023-03-29', 'price': 8.31, 'reason': 'est'})
+        trades.append({'index':i, 'code': '2888', 'quantity': 0, 'pnl': -2.0, 'date': '2023-03-29', 'price': 8.31, 'reason': None})
     # trades = pd.DataFrame(trades)
     context['trades'] = trades
 
@@ -165,7 +145,7 @@ def volume_design(fig, data, colors):
     fig.add_trace(go.Bar(x=data['Date'], y=data['Volume'], marker_color=colors, name="volume"),
                    secondary_y=False, row=3, col=1)
     return fig
-
+@timing
 def initialize():
     global fig
     fig = make_subplots(rows=3, cols=1,
@@ -174,11 +154,12 @@ def initialize():
                             row_width=[0.2, 0.2, 0.4])
 
 
-
+@timing
 def update_layout():
     global fig, dt_breaks
     fig.update_xaxes(
-        rangebreaks=[dict(values=dt_breaks)]
+        rangebreaks=[dict(values=dt_breaks)],
+        
     )
 
     fig.update_layout(
@@ -190,7 +171,7 @@ def update_layout():
     fig.update_layout(xaxis_rangeslider_visible=False, 
                       xaxis3_rangeslider_visible=True, 
                       xaxis_type="date")
-
+@timing
 def first_graph_generate():
     global data, fig
     fig.add_trace(go.Candlestick(x=data['Date'],
@@ -214,7 +195,7 @@ def first_graph_generate():
                              line=dict(color='orange', width=2),
                              hoverinfo='skip',
                              name='ma20'), row=1, col=1)
-
+@timing
 def buy_sell_point_graph():
     global data, colors, fig
     data.loc[0:2, 'buy_sell'] = 'buy'
@@ -254,21 +235,24 @@ def buy_sell_point_graph():
             hovertemplate='Price: %{y:$.2f} <extra></extra>'
         ), row=1, col=1
     )
-
+@timing
 def second_graph_generate():
     global data, colors, fig
     fig.add_trace(go.Bar(x=data['Date'], y=data['Volume'], marker_color=colors, name="volume"),
                    secondary_y=False, row=2, col=1)
-
+@timing
 def third_graph_generate():
     global data, fig, third
     fig.add_trace(go.Scatter(x=data['Date'], y=data[third],
                     mode='lines',
                     name='third'), row=3, col=1)
+
+@timing
 def third_graph_update():
     global fig, third, data
     fig.update_traces(selector=dict(name='third'), y=data[third])
 
+@timing
 def data_reload_recalculate():
     global data, interval, period, stock_name, dt_breaks
     print('function', period)

@@ -18,6 +18,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 
 import time
+from datetime import datetime
 from .forms import CreateUserForm
 
 
@@ -29,13 +30,13 @@ interval='1d'
 period='6mo'
 third='RSI'
 fig =''
-
+temp_code = 1
 def timing(f):
     def wrap(*args):
         time1 = time.time()
         ret = f(*args)
         time2 = time.time()
-        print(f'{f.__name__} function took {time2 - time1:.5f} seconds')
+        # print(f'{f.__name__} function took {time2 - time1:.5f} seconds')
         return ret
     return wrap
 
@@ -83,15 +84,18 @@ def logout(request):
 
 @timing
 def Graph(request):
-    global fig, period, third, interval
+    global fig, period, third, interval, data, temp_code
     # https://stackoverflow.com/questions/61346100/plotly-how-to-style-a-plotly-figure-so-that-it-doesnt-display-gaps-for-missing
-    data_reload_recalculate()
-    initialize()
-    first_graph_generate()
-    buy_sell_point_graph()
-    second_graph_generate()
-    third_graph_generate()
-    update_layout()
+    print("execute")
+    while temp_code:
+        data_reload_recalculate()
+        initialize()
+        first_graph_generate()
+        buy_sell_point_graph()
+        second_graph_generate()
+        third_graph_generate()
+        update_layout()
+        temp_code = 0
 
     context = {}
     context['graph'] = fig.to_html()
@@ -117,16 +121,51 @@ def Graph(request):
                 second_graph_generate()
                 third_graph_generate()
                 update_layout()
-            elif eventName == ('ajax-k-event') or eventName == ('ajax-rsi-event'):
+            elif (eventName == 'ajax-k-event') or (eventName == 'ajax-rsi-event'):
                 third_graph_update()
-            djangotoajax = '0'+button_text
-            newgraph = fig.to_html()
-            return JsonResponse({'djangotoajax':djangotoajax, 'newgraph':newgraph}, status =200)
+
+        else:
+            if eventName == 'ajax-hover-event':
+                # print(data.loc[0, 'Date'])
+                bstype = request.POST.get('type')
+                price = request.POST.get('price')
+                price = pd.Series(float(price))
+
+                date = request.POST.get('date')
+                date_str = date + " 00:00:00"
+                s = pd.Series(date_str)
+                dt = pd.to_datetime(s)
+                dt_taipei = dt.dt.tz_localize('Asia/Taipei')
+                print(dt_taipei)
+                print(price)
+                print(data.loc[0:2, 'Date'], data.loc[0:2, 'Close'])
+                fig.add_trace(
+                    go.Scatter(
+                        x=pd.Series(dt_taipei),
+                        y=pd.Series(price),
+                        mode="markers",
+                        marker=dict(
+                            symbol='triangle-up', 
+                            color='orange', 
+                            line=dict(color='black',width=2), 
+                            size = 30,
+                            opacity=0.5),
+                        text = '\n' + bstype,
+                        textposition = 'middle right',
+                        hovertemplate='Price: %{y:$.2f} <extra></extra>',
+                        name='hoveranime'
+                    ), row=1, col=1
+                )
+            elif eventName == 'hover_leave':
+                # fig.delete_traces("hoveranime")
+                fig.data = fig.data[:7]
+        newgraph = fig.to_html()
+        return JsonResponse({'newgraph':newgraph}, status =200)
 
     
     trades = []
     for i in range(4):
-        trades.append({'index':i, 'code': '2888', 'quantity': 0, 'pnl': -2.0, 'date': '2023-03-29', 'price': 8.31, 'reason': None})
+        trades.append({'index':i, 'type': 'buy', 'code': '2888', 'quantity': 0, 'pnl': -2.0, 'date': '2023-01-12', 'price': 400, 'reason': None})
     # trades = pd.DataFrame(trades)
     context['trades'] = trades
 
@@ -255,7 +294,6 @@ def third_graph_update():
 @timing
 def data_reload_recalculate():
     global data, interval, period, stock_name, dt_breaks
-    print('function', period)
     stock = yf.Ticker(stock_name)
     data = stock.history(period=period, interval=interval)
     data = data[['Open','High','Low','Close','Volume']]
@@ -286,4 +324,3 @@ def data_reload_recalculate():
     colors = ['red' if row['vol'] - row['last_vol'] >= 0
               else 'green' for index, row in temp_vol.iterrows()]
     colors.insert(0, 'green')
-    print(data.shape)

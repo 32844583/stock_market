@@ -24,7 +24,7 @@
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">股漲(一個酷酷的諧音梗)</a>
+        <a class="navbar-brand" href="#">股漲</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -53,6 +53,7 @@
       {% endif %}
 
     </nav>
+    {% csrf_token %}
     <button id='K' name="ajax-k-event">K</button>
     <button id='RSI' name="ajax-rsi-event">RSI</button>
     <button id='3mo' name="ajax-period-event">3mo</button>
@@ -68,6 +69,7 @@
         <table id="customers">
         <tr>
           <th>Index</th>
+          <th>Type</th>
           <th>Code</th>
           <th>Quantity</th>
           <th>PNL</th>
@@ -78,6 +80,7 @@
         {% for item in trades %}
         <tr id={{item.index}} name="ajax-hover-event">
         <td>{{item.index}}</td>
+        <td>{{item.type}}</td>
         <td>{{item.code}}</td>
         <td>{{item.quantity}}</td>
         <td>{{item.pnl}}</td>

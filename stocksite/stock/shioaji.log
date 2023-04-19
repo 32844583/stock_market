@@ -20,3 +20,4 @@
 [E 2023-04-12 11:10:16,803 C:\Users\ZiWei\Desktop\stockapp\venv2\lib\site-packages\shioaji\utils.py:48:raise_resp_error] {'status': {'status_code': 406}, 'response': {'detail': 'Account Not Acceptable.'}}
 [E 2023-04-12 12:38:09,832 C:\Users\ZiWei\anaconda3\envs\opencv\lib\site-packages\shioaji\shioaji.py:402:place_order] {'status': {'status_code': 406}, 'response': {'detail': 'Account Not Acceptable.'}}
 [E 2023-04-12 15:13:16,693 C:\Users\ZiWei\anaconda3\envs\opencv\lib\site-packages\shioaji\utils.py:48:raise_resp_error] {'status': {'status_code': 500}, 'response': {'detail': 'Internal Server Error'}}
+[E 2023-04-18 18:15:01,867 C:\Users\ZiWei\anaconda3\envs\opencv\lib\site-packages\shioaji\utils.py:48:raise_resp_error] {'status': {'status_code': 503}, 'response': {'detail': '結帳中，處理時間約1小時，請稍後再查詢。'}}

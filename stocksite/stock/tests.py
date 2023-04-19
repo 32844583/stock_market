@@ -3,7 +3,19 @@ import yfinance as yf
 import numpy as np
 from json import loads, dumps
 from datetime import datetime
+import plotly.graph_objs as go
 
+fig = go.Figure()
+
+# Add some traces to the figure
+fig.add_trace(go.Scatter(x=[1, 2, 3], y=[4, 5, 6], name="trace1"))
+fig.add_trace(go.Scatter(x=[1, 2, 3], y=[7, 8, 9], name="trace2"))
+
+# Delete a trace by name
+fig.delete_traces("trace1")
+
+# Show the updated figure
+fig.show()
 # https://plainenglish.io/blog/user-registration-and-login-authentication-in-django-2f3450479409#viewspy
 # ---
 # python plotly update particular trace's data by go
